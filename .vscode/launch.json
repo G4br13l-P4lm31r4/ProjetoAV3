@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Programa",
+            "request": "launch",
+            "mainClass": "locadora.Programa",
+            "projectName": "ProjetoAV3_d3702284"
+        },
+        {
+            "type": "java",
+            "name": "Locadora de Veículos",
+            "request": "launch",
+            "mainClass": "locadora.Programa",
+            "projectName": "ProjetoAV3",
+            "console": "integratedTerminal"
+        }
+    ]
+}
