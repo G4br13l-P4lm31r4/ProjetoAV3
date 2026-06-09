@@ -23,8 +23,13 @@ public class PagamentoDinheiro implements Pagavel {
         }
     }
 
-    public double getValorEntregue()           { return valorEntregue; }
-    public double getTroco()                   { return troco; }
+    public double getValorEntregue() {
+        return valorEntregue;
+    }
+
+    public double getTroco() {
+        return troco;
+    }
 
     @Override
     public String toString() {

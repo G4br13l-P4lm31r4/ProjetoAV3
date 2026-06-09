@@ -4,7 +4,7 @@ import interfaces.Pagavel;
 
 public class PagamentoCartaoCredito implements Pagavel {
 
-    private int    numeroParcelas;
+    private int numeroParcelas;
     private double valorPago;
 
     public PagamentoCartaoCredito(int numeroParcelas) {
@@ -19,8 +19,13 @@ public class PagamentoCartaoCredito implements Pagavel {
                 numeroParcelas, parcela, valor);
     }
 
-    public int getNumeroParcelas()             { return numeroParcelas; }
-    public void setNumeroParcelas(int n)       { this.numeroParcelas = n; }
+    public int getNumeroParcelas() {
+        return numeroParcelas;
+    }
+
+    public void setNumeroParcelas(int n) {
+        this.numeroParcelas = n;
+    }
 
     @Override
     public String toString() {
