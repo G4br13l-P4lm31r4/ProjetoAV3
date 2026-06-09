@@ -15,7 +15,6 @@ import java.util.Scanner;
 public class Programa {
 
     public static void main(String[] args) {
-        List<CarroEconomico> carrosEconomicos = new ArrayList<>();
         List<CarroLuxo> carrosLuxo = new ArrayList<>();
         List<Carro> carros = new ArrayList<>();
         List<Moto> motos = new ArrayList<>();
@@ -31,12 +30,12 @@ public class Programa {
         int[] proxIdFunc = { 1 };
         int[] proxIdLocacao = { 1 };
 
-        PreCadastro.executar(carrosEconomicos, carrosLuxo, carros, motos, vans,
+        PreCadastro.executar(carrosLuxo, carros, motos, vans,
                 clientes, funcionarios, locacoes, proxIdVeiculo, proxIdCliente, proxIdFunc, proxIdLocacao);
 
         System.out.println("------- BEM-VINDO À LOCADORA DE VEÍCULOS -------");
-        System.out.printf("%d carros econômicos, %d carros luxo, %d carros %n",
-                carrosEconomicos.size(), carrosLuxo.size(), carros.size());
+        System.out.printf("%d carros luxo, %d carros %n",
+                carrosLuxo.size(), carros.size());
         System.out.printf("%d motos, %d vans pré-cadastrados %n",
                 motos.size(), vans.size());
         System.out.printf("%d clientes, %d funcionários cadastrados %n",
@@ -47,40 +46,19 @@ public class Programa {
         int opcao;
         do {
             System.out.println("------- MENU PRINCIPAL -------");
-            System.out.println("1. Carros Econômicos");
-            System.out.println("2. Carros de Luxo");
-            System.out.println("3. Carros");
-            System.out.println("4. Motos");
-            System.out.println("5. Vans");
-            System.out.println("6. Clientes");
-            System.out.println("7. Funcionários");
-            System.out.println("8. Locações");
-            System.out.println("9. Exportar relatório de encerradas");
+            System.out.println("1. Carros de Luxo");
+            System.out.println("2. Carros");
+            System.out.println("3. Motos");
+            System.out.println("4. Vans");
+            System.out.println("5. Clientes");
+            System.out.println("6. Funcionários");
+            System.out.println("7. Locações");
+            System.out.println("8. Exportar relatório de encerradas");
             System.out.println("0. Sair");
             System.out.print("Opção: ");
             opcao = InputUtil.lerInt(sc);
             switch (opcao) {
                 case 1: {
-                    int op;
-                    do {
-                        System.out.println("\n--- CARROS ECONÔMICOS ---");
-                        System.out.println("1. Incluir   2. Alterar   3. Excluir");
-                        System.out.println("4. Listar    5. Buscar    0. Voltar");
-                        System.out.print("Opção: ");
-                        op = InputUtil.lerInt(sc);
-                        switch (op) {
-                            case 1: CarroEconomicoService.incluir(sc, carrosEconomicos, proxIdVeiculo); break;
-                            case 2: CarroEconomicoService.alterar(sc, carrosEconomicos); break;
-                            case 3: VeiculoService.excluir(carrosEconomicos, "Carro Econômico", sc); break;
-                            case 4: VeiculoService.listar(carrosEconomicos, "CARROS ECONÔMICOS"); break;
-                            case 5: VeiculoService.buscar(carrosEconomicos, "Carro Econômico", sc); break;
-                            case 0: break;
-                            default: System.out.println("Opção inválida!");
-                        }
-                    } while (op != 0);
-                    break;
-                }
-                case 2: {
                     int op;
                     do {
                         System.out.println("\n--- CARROS DE LUXO ---");
@@ -100,7 +78,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 3: {
+                case 2: {
                     int op;
                     do {
                         System.out.println("\n--- CARROS ---");
@@ -120,7 +98,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 4: {
+                case 3: {
                     int op;
                     do {
                         System.out.println("\n--- MOTOS ---");
@@ -140,7 +118,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 5: {
+                case 4: {
                     int op;
                     do {
                         System.out.println("\n--- VANS ---");
@@ -160,7 +138,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 6: {
+                case 5: {
                     int op;
                     do {
                         System.out.println("\n--- CLIENTES ---");
@@ -180,7 +158,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 7: {
+                case 6: {
                     int op;
                     do {
                         System.out.println("\n--- FUNCIONÁRIOS ---");
@@ -200,7 +178,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 8: {
+                case 7: {
                     int op;
                     do {
                         System.out.println("\n--- LOCAÇÕES ---");
@@ -212,7 +190,7 @@ public class Programa {
                         op = InputUtil.lerInt(sc);
                         switch (op) {
                             case 1:
-                                LocacaoService.incluir(sc, locacoes, clientes, carrosEconomicos, carrosLuxo, carros,
+                                LocacaoService.incluir(sc, locacoes, clientes, carrosLuxo, carros,
                                         motos, vans, funcionarios, proxIdLocacao);
                                 break;
                             case 2: LocacaoService.alterar(sc, locacoes); break;
@@ -221,7 +199,7 @@ public class Programa {
                             case 5: LocacaoService.listar(locacoes); break;
                             case 6: LocacaoService.buscar(sc, locacoes); break;
                             case 7:
-                                VeiculoService.listarDisponiveis(carrosEconomicos, carrosLuxo, carros, motos, vans);
+                                VeiculoService.listarDisponiveis(carrosLuxo, carros, motos, vans);
                                 break;
                             case 0: break;
                             default: System.out.println("Opção inválida!");
@@ -229,7 +207,7 @@ public class Programa {
                     } while (op != 0);
                     break;
                 }
-                case 9:
+                case 8:
                     RelatorioUtil.gerarRelatorioLocacoes(locacoes);
                     break;
                 case 0:

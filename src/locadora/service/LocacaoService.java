@@ -8,6 +8,9 @@ import model.pagamento.*;
 import interfaces.Pagavel;
 import locadora.util.InputUtil;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,7 +24,7 @@ public class LocacaoService {
     }
 
     public static void incluir(Scanner sc, List<Locacao> locacoes, List<Cliente> clientes,
-            List<CarroEconomico> carrosEco, List<CarroLuxo> carrosLuxo,
+            List<CarroLuxo> carrosLuxo,
             List<Carro> carros, List<Moto> motos, List<Van> vans,
             List<Funcionario> funcionarios, int[] proxId) {
         System.out.println("\n-- NOVA LOCAÇÃO --");
@@ -32,55 +35,51 @@ public class LocacaoService {
             System.out.println("Cliente não encontrado.");
             return;
         }
-        VeiculoService.listarDisponiveis(carrosEco, carrosLuxo, carros, motos, vans);
-        System.out.println("\nTipo: 1-CarroEco  2-CarroLuxo  3-Carro  4-Moto  5-Van");
+        VeiculoService.listarDisponiveis(carrosLuxo, carros, motos, vans);
+        System.out.println("\nTipo: 1-CarroLuxo  2-Carro  3-Moto  4-Van");
         System.out.print("Tipo: ");
         int tipo = InputUtil.lerInt(sc);
         System.out.print("ID do Veículo: ");
-        Veiculo vei = encontrarVeiculoDisponivel(tipo, InputUtil.lerInt(sc), carrosEco, carrosLuxo, carros, motos,
-                vans);
+        Veiculo vei = encontrarVeiculoDisponivel(tipo, InputUtil.lerInt(sc), carrosLuxo, carros, motos, vans);
         if (vei == null) {
             System.out.println("Veículo não encontrado ou indisponível.");
             return;
         }
-        FuncionarioService.listar(funcionarios);
-        System.out.print("ID do Funcionário: ");
-        Funcionario func = FuncionarioService.buscarPorId(funcionarios, InputUtil.lerInt(sc));
-        if (func == null) {
-            System.out.println("Funcionário não encontrado.");
+        if (funcionarios.isEmpty()) {
+            System.out.println("Nenhum funcionário disponível.");
             return;
         }
+        Funcionario func = funcionarios.get((int) (Math.random() * funcionarios.size()));
+        System.out.println("Funcionário responsável: " + func.getNome());
         System.out.print("Data de Retirada (dd/MM/aaaa): ");
         String ret = sc.nextLine().trim();
         System.out.print("Data de Devolução (dd/MM/aaaa): ");
         String dev = sc.nextLine().trim();
-        System.out.print("Quantidade de Dias: ");
-        int dias = InputUtil.lerInt(sc);
-        System.out.print("Observações: ");
-        String obs = sc.nextLine().trim();
-        Locacao loc = new Locacao(proxId[0]++, cli, vei, func, ret, dev, dias, obs);
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            long dias = ChronoUnit.DAYS.between(LocalDate.parse(ret, fmt), LocalDate.parse(dev, fmt));
+            System.out.printf("Período: %s - %s → %d dia(s)%n", ret, dev, dias > 0 ? dias : 1);
+        } catch (Exception ignored) {}
+        Locacao loc = new Locacao(proxId[0]++, cli, vei, func, ret, dev);
         locacoes.add(loc);
         System.out.printf("Locação ID %d criada! Valor total: R$ %.2f%n", loc.getId(), loc.getValorTotal());
     }
 
     private static Veiculo encontrarVeiculoDisponivel(int tipo, int id,
-            List<CarroEconomico> carrosEco, List<CarroLuxo> carrosLuxo,
+            List<CarroLuxo> carrosLuxo,
             List<Carro> carros, List<Moto> motos, List<Van> vans) {
         Veiculo v = null;
         switch (tipo) {
             case 1:
-                v = VeiculoService.buscarPorId(carrosEco, id);
-                break;
-            case 2:
                 v = VeiculoService.buscarPorId(carrosLuxo, id);
                 break;
-            case 3:
+            case 2:
                 v = VeiculoService.buscarPorId(carros, id);
                 break;
-            case 4:
+            case 3:
                 v = VeiculoService.buscarPorId(motos, id);
                 break;
-            case 5:
+            case 4:
                 v = VeiculoService.buscarPorId(vans, id);
                 break;
         }
@@ -99,18 +98,10 @@ public class LocacaoService {
             System.out.println("Só é possível alterar locações ABERTAS.");
             return;
         }
-        System.out.print("Observações [" + loc.getObservacoes() + "]: ");
+        System.out.print("Data Devolução [" + loc.getDataDevolucao() + "]: ");
         String v = sc.nextLine().trim();
         if (!v.isEmpty())
-            loc.setObservacoes(v);
-        System.out.print("Data Devolução [" + loc.getDataDevolucao() + "]: ");
-        v = sc.nextLine().trim();
-        if (!v.isEmpty())
             loc.setDataDevolucao(v);
-        System.out.print("Quantidade de Dias [" + loc.getQuantidadeDias() + "] (0=manter): ");
-        int n = InputUtil.lerInt(sc);
-        if (n > 0)
-            loc.setQuantidadeDias(n);
         System.out.println("Locação ID " + id + " alterada com sucesso!");
     }
 
@@ -126,14 +117,12 @@ public class LocacaoService {
             System.out.println("Locação já está " + loc.getStatus());
             return;
         }
-        System.out.print("Data de Devolução Real (dd/MM/aaaa): ");
+        System.out.print("Data dlução Real (dd/MM/aaaa): ");
         String data = sc.nextLine().trim();
-        System.out.print("Dias reais utilizados: ");
-        int dias = InputUtil.lerInt(sc);
-        loc.encerrarLocacao(data, dias);
+        loc.encerrarLocacao(data);
         System.out.printf("Locação encerrada! Valor final: R$ %.2f%n", loc.getValorTotal());
         System.out.println("\n-- FORMA DE PAGAMENTO --");
-        System.out.println("1. PIX   2. Cartão de Crédito   3. Dinheiro");
+        System.out.println("1. PIX   2. Cartão de Crédito");
         System.out.print("Opção: ");
         Pagavel pagamento = null;
         switch (InputUtil.lerInt(sc)) {
@@ -144,10 +133,6 @@ public class LocacaoService {
                 System.out.print("Número de parcelas: ");
                 int parcelas = InputUtil.lerInt(sc);
                 pagamento = new PagamentoCartaoCredito(parcelas < 1 ? 1 : parcelas);
-                break;
-            case 3:
-                System.out.printf("Valor a pagar: R$ %.2f%nValor entregue: R$ ", loc.getValorTotal());
-                pagamento = new PagamentoDinheiro(InputUtil.lerDouble(sc));
                 break;
             default:
                 System.out.println("Forma de pagamento inválida. Pagamento não registrado.");

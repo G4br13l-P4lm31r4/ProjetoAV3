@@ -4,6 +4,9 @@ import interfaces.Pagavel;
 import model.pessoa.Cliente;
 import model.pessoa.Funcionario;
 import model.veiculo.Veiculo;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Locacao {
 
@@ -17,12 +20,10 @@ public class Locacao {
     private int quantidadeDias;
     private double valorTotal;
     private String status;
-    private String observacoes;
     private Pagavel formaPagamento;
 
     public Locacao(int id, Cliente cliente, Veiculo veiculo, Funcionario funcionario,
-            String dataRetirada, String dataDevolucao,
-            int quantidadeDias, String observacoes) {
+            String dataRetirada, String dataDevolucao) {
         this.id = id;
         this.cliente = cliente;
         this.veiculo = veiculo;
@@ -30,19 +31,30 @@ public class Locacao {
         this.dataRetirada = dataRetirada;
         this.dataDevolucao = dataDevolucao;
         this.dataDevolucaoReal = null;
-        this.quantidadeDias = quantidadeDias;
-        this.observacoes = observacoes;
+        this.quantidadeDias = calcularDias(dataRetirada, dataDevolucao);
         this.status = "ABERTA";
         this.formaPagamento = null;
-        this.valorTotal = veiculo.calcularValorDiaria() * quantidadeDias;
+        this.valorTotal = veiculo.calcularValorDiaria() * this.quantidadeDias;
         veiculo.iniciarLocacao();
         cliente.incrementarLocacoes();
     }
 
-    public void encerrarLocacao(String dataDevolucaoReal, int diasReais) {
+    private static int calcularDias(String dataInicio, String dataFim) {
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate inicio = LocalDate.parse(dataInicio, fmt);
+            LocalDate fim = LocalDate.parse(dataFim, fmt);
+            long dias = ChronoUnit.DAYS.between(inicio, fim);
+            return dias > 0 ? (int) dias : 1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    public void encerrarLocacao(String dataDevolucaoReal) {
         this.dataDevolucaoReal = dataDevolucaoReal;
-        this.quantidadeDias = diasReais;
-        this.valorTotal = veiculo.calcularValorDiaria() * diasReais;
+        this.quantidadeDias = calcularDias(this.dataRetirada, dataDevolucaoReal);
+        this.valorTotal = veiculo.calcularValorDiaria() * this.quantidadeDias;
         this.status = "ENCERRADA";
         veiculo.finalizarLocacao();
     }
@@ -67,8 +79,7 @@ public class Locacao {
                         "  Qtd. de Dias......: %d dias\n" +
                         "  Diária do Veículo.: R$ %.2f\n" +
                         "  Valor Total.......: R$ %.2f\n" +
-                        "  Forma de Pagamento: %s\n" +
-                        "  Observações.......: %s",
+                        "  Forma de Pagamento: %s",
                 id, status,
                 cliente.getId(), cliente.getNome(),
                 veiculo.getId(), veiculo.getMarca(), veiculo.getModelo(), veiculo.getPlaca(),
@@ -76,7 +87,7 @@ public class Locacao {
                 dataRetirada, dataDevolucao,
                 dataDevolucaoReal != null ? dataDevolucaoReal : "Em aberto",
                 quantidadeDias, veiculo.calcularValorDiaria(),
-                valorTotal, pagamentoInfo, observacoes);
+                valorTotal, pagamentoInfo);
     }
 
     public int getId() {
@@ -125,6 +136,8 @@ public class Locacao {
 
     public void setDataDevolucao(String d) {
         this.dataDevolucao = d;
+        this.quantidadeDias = calcularDias(this.dataRetirada, d);
+        this.valorTotal = veiculo.calcularValorDiaria() * this.quantidadeDias;
     }
 
     public String getDataDevolucaoReal() {
@@ -155,14 +168,6 @@ public class Locacao {
         this.status = s;
     }
 
-    public String getObservacoes() {
-        return observacoes;
-    }
-
-    public void setObservacoes(String o) {
-        this.observacoes = o;
-    }
-
     public Pagavel getFormaPagamento() {
         return formaPagamento;
     }
@@ -173,8 +178,9 @@ public class Locacao {
 
     @Override
     public String toString() {
-        return String.format("[%d] %s | Cliente: %s | Veículo: %s %s | Valor: R$ %.2f",
+        return String.format("[%d] %s | Cliente: %s | Veículo: %s %s | %s - %s (%d dia(s)) | R$ %.2f",
                 id, status, cliente.getNome(),
-                veiculo.getMarca(), veiculo.getModelo(), valorTotal);
+                veiculo.getMarca(), veiculo.getModelo(),
+                dataRetirada, dataDevolucao, quantidadeDias, valorTotal);
     }
 }

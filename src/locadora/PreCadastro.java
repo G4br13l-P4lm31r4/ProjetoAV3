@@ -10,7 +10,6 @@ import java.util.List;
 public class PreCadastro {
 
     public static void executar(
-            List<CarroEconomico> carrosEconomicos,
             List<CarroLuxo> carrosLuxo,
             List<Carro> carros,
             List<Moto> motos,
@@ -22,22 +21,6 @@ public class PreCadastro {
             int[] proxIdCliente,
             int[] proxIdFunc,
             int[] proxIdLocacao) {
-
-        // Carros Econômicos
-        carrosEconomicos.add(new CarroEconomico(proxIdVeiculo[0]++, "ECO-0001", "Volkswagen", "Gol", 2020, 35000, 4,
-                "Flex", 255, 12.5));
-        carrosEconomicos.add(
-                new CarroEconomico(proxIdVeiculo[0]++, "ECO-0002", "Fiat", "Uno", 2019, 52000, 4, "Flex", 240, 13.0));
-        carrosEconomicos.add(new CarroEconomico(proxIdVeiculo[0]++, "ECO-0003", "Chevrolet", "Onix", 2021, 18000, 4,
-                "Flex", 205, 14.2));
-        carrosEconomicos.add(new CarroEconomico(proxIdVeiculo[0]++, "ECO-0004", "Renault", "Kwid", 2022, 8000, 4,
-                "Flex", 210, 15.0));
-        carrosEconomicos.add(
-                new CarroEconomico(proxIdVeiculo[0]++, "ECO-0005", "Ford", "Ka", 2019, 44000, 4, "Flex", 257, 12.8));
-        carrosEconomicos.add(new CarroEconomico(proxIdVeiculo[0]++, "ECO-0006", "Hyundai", "HB20", 2021, 26000, 4,
-                "Flex", 270, 13.5));
-        carrosEconomicos.add(new CarroEconomico(proxIdVeiculo[0]++, "ECO-0007", "Toyota", "Etios", 2018, 61000, 4,
-                "Flex", 250, 12.2));
 
         // Carros de Luxo
         carrosLuxo.add(new CarroLuxo(proxIdVeiculo[0]++, "LUX-0001", "BMW", "Série 3", 2022, 9000, 4, "Gasolina", 480,
@@ -115,19 +98,19 @@ public class PreCadastro {
                 "roberto@locadora.com", "Rua G, 7", "F007", "Financeiro", 3800.00, "03/06/2021"));
 
         // Locações
-        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(0), carrosEconomicos.get(0), funcionarios.get(1),
-                "01/05/2026", "05/05/2026", 4, "Sem observações"));
+        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(0), carros.get(0), funcionarios.get(1),
+                "01/06/2026", "05/06/2026"));
         locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(1), carrosLuxo.get(0), funcionarios.get(1),
-                "02/05/2026", "07/05/2026", 5, "Cliente VIP"));
-        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(2), motos.get(0), funcionarios.get(3), "03/05/2026",
-                "04/05/2026", 1, "Passeio fim de semana"));
-        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(3), vans.get(0), funcionarios.get(3), "05/05/2026",
-                "10/05/2026", 5, "Viagem em grupo"));
-        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(4), carros.get(0), funcionarios.get(1), "06/05/2026",
-                "09/05/2026", 3, "Viagem a trabalho"));
-        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(5), carrosEconomicos.get(1), funcionarios.get(3),
-                "07/05/2026", "11/05/2026", 4, "Carro reserva"));
-        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(6), carrosLuxo.get(1), funcionarios.get(1),
-                "08/05/2026", "12/05/2026", 4, "Lua de mel"));
+                "02/06/2026", "07/06/2026"));
+        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(2), motos.get(0), funcionarios.get(3),
+                "03/06/2026", "04/06/2026"));
+        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(3), vans.get(0), funcionarios.get(3),
+                "05/06/2026", "10/06/2026"));
+        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(4), carros.get(2), funcionarios.get(1),
+                "07/06/2026", "12/06/2026"));
+        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(5), carros.get(3), funcionarios.get(3),
+                "08/06/2026", "14/06/2026"));
+        locacoes.add(new Locacao(proxIdLocacao[0]++, clientes.get(6), carrosLuxo.get(2), funcionarios.get(1),
+                "09/06/2026", "16/06/2026"));
     }
 }

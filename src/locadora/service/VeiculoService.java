@@ -87,13 +87,9 @@ public class VeiculoService {
             System.out.println("Nenhum resultado encontrado.");
     }
 
-    public static void listarDisponiveis(List<CarroEconomico> carrosEco, List<CarroLuxo> carrosLuxo,
+    public static void listarDisponiveis(List<CarroLuxo> carrosLuxo,
             List<Carro> carros, List<Moto> motos, List<Van> vans) {
         System.out.println("\n=== VEÍCULOS DISPONÍVEIS ===");
-        System.out.println("-- Carros Econômicos --");
-        for (CarroEconomico ce : carrosEco)
-            if (ce.isDisponivel())
-                System.out.println(ce);
         System.out.println("-- Carros de Luxo --");
         for (CarroLuxo cl : carrosLuxo)
             if (cl.isDisponivel())
